@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Absensi Kelas</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+
+        <!-- HEADER -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <img src="assets/absensi.png" alt="Logo Absensi" class="logo">
+                <h1>Absensi Kelas</h1>
+            </div>
+            <div class="header-right">
+                <span id="greeting" class="greeting"></span>
+                <button id="logoutBtn" class="btn-secondary">Keluar</button>
+            </div>
+        </header>
+
+        <!-- NAVIGATION -->
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
+                <li><a href="absen.php" class="nav-link">Absensi Harian</a></li>
+                <li><a href="rekap.php" class="nav-link">Rekap Absen</a></li>
+                <li><a href="datasiswa.php" class="nav-link">Data Siswa</a></li>
+                <li><a href="datakelas.php" class="nav-link">Data Kelas</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link">Laporan</a>
+                    <div class="dropdown-content">
+                        <a href="laporan_harian.html">Laporan Harian</a>
+                        <a href="laporan_bulanan.html">Laporan Bulanan</a>
+                    </div>
+                </li>
+                <li><a href="histori.html" class="nav-link">Histori Absensi</a></li>
+            </ul>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="dashboard-main">
+            <div class="dashboard-cards">
+
+                <!-- CARD 1 -->
+                <div class="card">
+                    <h3>Absensi Harian</h3>
+                    <p>Input kehadiran siswa setiap hari.</p>
+                    <a href="absen.html" class="btn-primary">Mulai</a>
+                </div>
+
+                <!-- CARD 2 -->
+                <div class="card">
+                    <h3>Rekap Absen</h3>
+                    <p>Lihat rekap absensi mingguan dan bulanan.</p>
+                    <a href="rekap.html" class="btn-primary">Lihat</a>
+                </div>
+
+                <!-- CARD 3 -->
+                <div class="card">
+                    <h3>Data Siswa</h3>
+                    <p>Kelola daftar siswa di setiap kelas.</p>
+                    <a href="datasiswa.html" class="btn-primary">Kelola</a>
+                </div>
+
+                <!-- CARD 4 -->
+                <div class="card">
+                    <h3>Laporan Absensi</h3>
+                    <p>Download laporan absensi sesuai kebutuhan.</p>
+                    <a href="laporan_bulanan.html" class="btn-primary">Lihat</a>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stok Bahan Ajar - SITTA UT</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <img src="assets/ut.png" alt="Logo UT" class="logo">
+                <h1>SITTA UT</h1>
+            </div>
+            <div class="header-right">
+                <span id="greeting" class="greeting"></span>
+                <button id="logoutBtn" class="btn-secondary">Keluar</button>
+            </div>
+        </header>
+
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="stok.html" class="nav-link active">Informasi Bahan Ajar</a></li>
+                <li><a href="tracking.html" class="nav-link">Tracking Pengiriman</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link">Laporan</a>
+                    <div class="dropdown-content">
+                        <a href="#">Monitoring Progress DO Bahan Ajar</a>
+                        <a href="#">Rekap Bahan Ajar</a>
+                    </div>
+                </li>
+                <li><a href="#" class="nav-link">Histori Transaksi Bahan Ajar</a></li>
+            </ul>
+        </nav>
+
+        <main class="stok-main">
+            <div class="stok-header">
+                <h2>Informasi Stok Bahan Ajar</h2>
+                <button id="addStockBtn" class="btn-primary">Tambah Stok</button>
+            </div>
+            
+            <table id="stockTable" class="stock-table">
+                <thead>
+                    <tr>
+                        <th>Kode Bahan</th>
+                        <th>Nama Bahan</th>
+                        <th>Stok</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="stockTableBody">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- Modal Tambah Stok -->
+    <div id="addStockModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Tambah Stok Baru</h2>
+            <form id="addStockForm">
+                <div class="form-group">
+                    <label for="kodeBahan">Kode Bahan</label>
+                    <input type="text" id="kodeBahan" name="kodeBahan" required>
+                </div>
+                <div class="form-group">
+                    <label for="namaBahan">Nama Bahan</label>
+                    <input type="text" id="namaBahan" name="namaBahan" required>
+                </div>
+                <div class="form-group">
+                    <label for="stok">Jumlah Stok</label>
+                    <input type="number" id="stok" name="stok" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="Tersedia">Tersedia</option>
+                        <option value="Habis">Habis</option>
+                        <option value="Terbatas">Terbatas</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Simpan</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
