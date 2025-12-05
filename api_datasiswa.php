@@ -1,26 +1,24 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 include "connect.php";
 
-$kelas = $_GET['kelas'] ?? '';
-
-$stmt = $conn->prepare("
-    SELECT * FROM siswaXI WHERE Kelas = ?
-    UNION
-    SELECT * FROM siswaX WHERE Kelas = ?
-    ORDER BY Nama ASC
-");
-$stmt->bind_param("ss", $kelas, $kelas);
-$stmt->execute();
-
-$result = $stmt->get_result();
+$kelas = $_GET["kelas"];
 
 $data = [];
-while ($row = $result->fetch_assoc()) {
-    $data[] = $row;
+
+$q1 = $conn->query("SELECT * FROM siswa WHERE kelas='$kelas'");
+while ($r = $q1->fetch_assoc()) {
+    $data[] = [
+        "nis" => $r["NIS"],
+        "nama" => $r["Nama"]
+    ];
+}
+
+$q2 = $conn->query("SELECT * FROM siswaXI WHERE kelas='$kelas'");
+while ($r = $q2->fetch_assoc()) {
+    $data[] = [
+        "nis" => $r["NIS"],
+        "nama" => $r["Nama"]
+    ];
 }
 
 echo json_encode($data);
-?>
