@@ -1,221 +1,211 @@
+<?php
+include 'connect.php';
+$absenData = [];
+
+// Ambil data dari siswa
+$q = $conn->query("SELECT no, Nama, Kelas, status, tanggal FROM siswa ORDER BY no ASC");
+while ($r = $q->fetch_assoc()) {
+  $absenData[] = $r;
+}
+
+// Ambil data dari siswaXI
+$q2 = $conn->query("SELECT no, Nama, Kelas, status, tanggal FROM siswaXI ORDER BY no ASC");
+while ($r = $q2->fetch_assoc()) {
+  $absenData[] = $r;
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rekap Absen</title>
+  <title>Rekap Absensi</title>
   <link rel="stylesheet" href="css/style.css">
-
   <style>
-    .rekap-container {
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+    }
+
+    .container {
       max-width: 900px;
       margin: 30px auto;
+      padding: 20px;
       background: #fff;
-      padding: 25px;
       border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .date-item {
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .filter-box {
       display: flex;
-      align-items: center;
       gap: 10px;
-      margin-bottom: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
     }
 
-    .btn-date {
-      padding: 8px 12px;
+    select,
+    input {
+      padding: 7px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .btn {
+      padding: 7px 12px;
       border: none;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
-      background: #0066cc;
+      background: #2b6cb0;
       color: white;
     }
-    .btn-date:hover { background: #004a99; }
 
-    .btn-delete {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background: #d00000;
-      color: white;
-    }
-    .btn-delete:hover { background: #900000; }
-
-    .rekap-table {
+    table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 10px;
     }
-    .rekap-table th, .rekap-table td {
-      border-bottom: 1px solid #ddd;
-      padding: 12px;
+
+    th,
+    td {
+      padding: 10px;
       text-align: center;
+      border: 1px solid #ddd;
     }
-    .rekap-table th {
-      background: #0066cc;
-      color: #fff;
+
+    th {
+      background: #2b6cb0;
+      color: white;
+    }
+
+    .status {
+      padding: 3px 7px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .Hadir {
+      background: #38a169;
+    }
+
+    .Izin {
+      background: #3182ce;
+    }
+
+    .Sakit {
+      background: #dd6b20;
+    }
+
+    .Alpa {
+      background: #e53e3e;
     }
   </style>
 </head>
-<body>
 
-<header class="dashboard-header">
+<body>
+    <header class="dashboard-header">
     <div class="header-left">
         <img src="assets/absensi.png" alt="Logo Absensi" class="logo">
         <h1>Absensi Kelas</h1>
     </div>
     <div class="header-right">
         <span id="greeting" class="greeting"></span>
-        <button id="logoutBtn" class="btn-secondary">Keluar</button>
+        <a href="absen.php"><button class="btn">Kembali</button></a>
     </div>
 </header>
-
-<nav class="dashboard-nav">
-    <ul>
-        <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
-        <li><a href="absen.php" class="nav-link">Absensi Harian</a></li>
-        <li><a href="rekap.php" class="nav-link active">Rekap Absen</a></li>
-        <li><a href="datasiswa.php" class="nav-link">Data Siswa</a></li>
-        <li><a href="datakelas.php" class="nav-link">Data Kelas</a></li>
-        <li class="dropdown">
-            <a href="#" class="nav-link">Laporan</a>
-            <div class="dropdown-content">
-                <a href="laporan_harian.html">Laporan Harian</a>
-                <a href="laporan_bulanan.html">Laporan Bulanan</a>
-            </div>
-        </li>
-        <li><a href="histori.html" class="nav-link">Histori Absensi</a></li>
-    </ul>
-</nav>
-
-<div class="rekap-container">
+  <div class="container">
     <h2>Rekap Absensi</h2>
 
-    <div id="dateList"></div>
+    <div class="filter-box">
+      <select id="pilihKelas">
+        <option value="">Semua Kelas</option>
+        <?php
+        $kelas1 = $conn->query("SELECT DISTINCT Kelas FROM siswa ORDER BY Kelas ASC");
+        while ($k = $kelas1->fetch_assoc())
+          echo "<option value='{$k['Kelas']}'>{$k['Kelas']}</option>";
+        $kelas2 = $conn->query("SELECT DISTINCT Kelas FROM siswaXI ORDER BY Kelas ASC");
+        while ($k = $kelas2->fetch_assoc())
+          echo "<option value='{$k['Kelas']}'>{$k['Kelas']}</option>";
+        ?>
+      </select>
 
-    <div id="rekapDetail" style="display:none;">
-      <table class="rekap-table">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Nama Siswa</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="rekapTabelBody"></tbody>
-      </table>
+      <select id="filterStatus">
+        <option value="">Semua Status</option>
+        <option value="Hadir">Hadir</option>
+        <option value="Izin">Izin</option>
+        <option value="Sakit">Sakit</option>
+        <option value="Alpa">Alpa</option>
+      </select>
 
-      <div id="summaryStats" style="margin-top:20px;"></div>
+      <input type="text" id="filterNama" placeholder="Cari nama...">
+      <button class="btn" onclick="applyFilters()">Filter</button>
+      <button class="btn" onclick="resetFilters()">Reset</button>
     </div>
-</div>
 
-<script>
-let lastOpenedKey = null;  // untuk toggle panel
+    <table>
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Nama</th>
+          <th>Kelas</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
 
-function getAbsensiKeys() {
-  return Object.keys(localStorage)
-    .filter(k => k.startsWith("absensi_"))
-    .sort();
-}
+  <script>
+    const data = <?= json_encode($absenData); ?>;
 
-function loadDateButtons() {
-  const container = document.getElementById("dateList");
-  container.innerHTML = "";
-
-  const keys = getAbsensiKeys();
-  if (keys.length === 0) {
-    container.innerHTML = "<p>Belum ada data absensi.</p>";
-    return;
-  }
-
-  keys.forEach(key => {
-    const tanggal = key.replace("absensi_", "");
-
-    const wrap = document.createElement("div");
-    wrap.className = "date-item";
-
-    const btnTanggal = document.createElement("button");
-    btnTanggal.className = "btn-date";
-    btnTanggal.textContent = tanggal;
-    btnTanggal.onclick = () => toggleRekap(key, tanggal);
-
-    const btnDelete = document.createElement("button");
-    btnDelete.className = "btn-delete";
-    btnDelete.textContent = "Hapus";
-    btnDelete.onclick = () => deleteData(key);
-
-    wrap.appendChild(btnTanggal);
-    wrap.appendChild(btnDelete);
-    container.appendChild(wrap);
-  });
-}
-
-function deleteData(key) {
-  const tanggal = key.replace("absensi_", "");
-
-  if (!confirm(`Yakin ingin menghapus absensi tanggal ${tanggal}?`)) return;
-
-  localStorage.removeItem(key);
-
-  alert("Data berhasil dihapus!");
-  loadDateButtons();
-  document.getElementById("rekapDetail").style.display = "none";
-}
-
-function toggleRekap(key, tanggal) {
-  const panel = document.getElementById("rekapDetail");
-
-  // jika tombol sama ditekan dua kali → tutup
-  if (lastOpenedKey === key && panel.style.display === "block") {
-    panel.style.display = "none";
-    lastOpenedKey = null;
-    return;
-  }
-
-  showRekap(key, tanggal);
-  lastOpenedKey = key;
-}
-
-function showRekap(key, tanggal) {
-  const raw = localStorage.getItem(key);
-  if (!raw) return;
-
-  const data = JSON.parse(raw);
-  const tbody = document.getElementById("rekapTabelBody");
-  tbody.innerHTML = "";
-
-  let hadir = 0, izin = 0, sakit = 0, alpa = 0;
-
-  Object.keys(data).forEach((nis, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${i + 1}</td>
-      <td>${nis}</td>
-      <td>${data[nis]}</td>
+    function loadTable(list) {
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+      list.forEach(r => {
+        const statusClass = r.status ? r.status : '';
+        const tanggal = r.tanggal ? r.tanggal : '-';
+        tbody.innerHTML += `
+      <tr>
+        <td>${tanggal}</td>
+        <td>${r.Nama}</td>
+        <td>${r.Kelas}</td>
+        <td class="status ${statusClass}">${r.status}</td>
+      </tr>
     `;
-    tbody.appendChild(tr);
+      });
+    }
 
-    if (data[nis] === "Hadir") hadir++;
-    else if (data[nis] === "Izin") izin++;
-    else if (data[nis] === "Sakit") sakit++;
-    else if (data[nis] === "Alpa") alpa++;
-  });
+    function applyFilters() {
+      const kelas = document.getElementById("pilihKelas").value;
+      const status = document.getElementById("filterStatus").value;
+      const nama = document.getElementById("filterNama").value.toLowerCase();
 
-  document.getElementById("summaryStats").innerHTML = `
-    <b>Rekap tanggal ${tanggal}:</b><br>
-    Hadir: ${hadir} <br>
-    Izin: ${izin} <br>
-    Sakit: ${sakit} <br>
-    Alpa: ${alpa}
-  `;
+      const filtered = data.filter(r =>
+        (kelas === "" || r.Kelas === kelas) &&
+        (status === "" || r.status === status) &&
+        (nama === "" || r.Nama.toLowerCase().includes(nama))
+      );
+      loadTable(filtered);
+    }
 
-  document.getElementById("rekapDetail").style.display = "block";
-}
+    function resetFilters() {
+      document.getElementById("pilihKelas").value = "";
+      document.getElementById("filterStatus").value = "";
+      document.getElementById("filterNama").value = "";
+      loadTable(data);
+    }
 
-loadDateButtons();
-</script>
+    // Load awal
+    loadTable(data);
+  </script>
 
 </body>
+
 </html>
